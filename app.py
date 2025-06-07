@@ -100,152 +100,60 @@ def logout():
 @login_required
 def chat():
     import random
+    import logging
+    
+    # Add logging
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
     
     # Daily affirmations/tips
     daily_tips = [
         "🌞 You are doing better than you think. One breath at a time.",
-        "🌱 Progress, not perfection. Every small step counts.",
-        "💙 Be kind to yourself today. You deserve compassion.",
-        "🌈 This feeling is temporary. You have overcome challenges before.",
-        "⭐ Your mental health matters. Take time for yourself today.",
-        "🌸 Breathe deeply. You are exactly where you need to be.",
-        "🦋 Growth happens in moments of discomfort. You're growing.",
-        "💪 You are stronger than you realize. Trust in your resilience.",
-        "🌺 Take a moment to appreciate how far you've come.",
-        "✨ Your feelings are valid. It's okay to not be okay sometimes."
+        # ... rest of your tips
     ]
     
-    # Get random daily tip
     daily_tip = random.choice(daily_tips)
-    
     history = ChatHistory.query.filter_by(user_id=current_user.id).all()
     show_self_care_offer = len(history) >= 3
     
     if request.method == 'POST':
-        # Handle mood tracking
-        if 'mood_score' in request.form:
-            mood_score = int(request.form['mood_score'])
-            mood_notes = request.form.get('mood_notes', '')
-            mood_entry = MoodEntry(user_id=current_user.id, mood_score=mood_score, notes=mood_notes)
-            db.session.add(mood_entry)
-            db.session.commit()
-            # Don't flash message, just redirect quietly
-            return redirect(url_for('chat'))
-        
-        # Handle self-care plan generation
-        if 'generate_plan' in request.form:
-            # Analyze recent conversations for personalized plan
-            recent_messages = [chat.message for chat in history[-5:]]  # Last 5 messages
-            conversation_context = " ".join(recent_messages)
-            
-            plan_prompt = f"""Based on this user's recent conversations: "{conversation_context}"
-            
-            Create a simple, personalized 3-step self-care plan for today. Make it specific, actionable, and supportive.
-            
-            Format as:
-            **Step 1:** [specific action]
-            **Step 2:** [specific action] 
-            **Step 3:** [specific action]
-            
-            Keep it encouraging and focus on immediate, doable activities."""
-            
-            try:
-                plan_response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[{"role": "user", "content": plan_prompt}],
-                    temperature=0.7
-                )
-                plan_content = plan_response['choices'][0]['message']['content'].strip()
-                
-                # Save plan to database
-                self_care_plan = SelfCarePlan(user_id=current_user.id, plan_content=plan_content)
-                db.session.add(self_care_plan)
-                db.session.commit()
-                
-                flash('Your personalized self-care plan has been generated! 🌟')
-                return redirect(url_for('view_plan', plan_id=self_care_plan.id))
-            except:
-                flash('Sorry, there was an error generating your plan. Please try again.')
+        logger.info("POST request received")
         
         # Handle chat message
         if 'message' in request.form:
             user_message = request.form['message']
+            logger.info(f"User message: {user_message}")
             
-            # Enhanced system prompt with better suggestions
-            system_prompt = """You are a compassionate mental health assistant. Provide helpful, supportive responses about mental health, meditation, breathing exercises, and wellness.
-
-            IMPORTANT: Always end your response with exactly 3 short suggestions separated by | (pipe character).
-            
-            Choose suggestions from these helpful options:
-            - Try a 5-minute meditation
-            - Practice box breathing
-            - Learn grounding techniques  
-            - Try progressive muscle relaxation
-            - Practice mindful walking
-            - Do a body scan meditation
-            - Try loving-kindness meditation
-            - Practice the 4-7-8 breathing
-            - Learn the 5-4-3-2-1 technique
-            - Try guided imagery
-            - Practice gratitude meditation
-            - Do gentle stretching
-            - Try journaling prompts
-            - Practice deep breathing
-            - Learn stress relief techniques
-            
-            Format your response exactly like this:
-            [Your helpful response here]
-            
-            ---SUGGESTIONS---
-            Try a 5-minute meditation|Practice box breathing|Learn grounding techniques
-            
-            Keep suggestions short and actionable. Focus on practical techniques users can do immediately."""
-            
-            try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_message}
-                    ],
-                    temperature=0.7
-                )
-                full_response = response['choices'][0]['message']['content'].strip()
+            # Check if OpenAI API key exists
+            api_key = os.getenv("OPENAI_API_KEY")
+            if not api_key:
+                logger.error("No OpenAI API key found!")
+                assistant_reply = "Configuration error: Missing API key"
+                suggestions = "Contact support|Try again later|Check settings"
+            else:
+                logger.info("OpenAI API key found, making request...")
                 
-                # Split response and suggestions more carefully
-                if "---SUGGESTIONS---" in full_response:
-                    parts = full_response.split("---SUGGESTIONS---")
-                    assistant_reply = parts[0].strip()
-                    suggestions_text = parts[1].strip()
+                try:
+                    # Your existing OpenAI code here
+                    response = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_message}
+                        ],
+                        temperature=0.7
+                    )
+                    full_response = response['choices'][0]['message']['content'].strip()
+                    logger.info("OpenAI response received successfully")
                     
-                    # Clean up suggestions and ensure proper separation
-                    suggestions = suggestions_text.replace('\n', '|').replace('  ', ' ')
-                    # Remove any numbering or bullet points
-                    suggestions = suggestions.replace('1.', '').replace('2.', '').replace('3.', '')
-                    suggestions = suggestions.replace('-', '').replace('•', '').replace('*', '')
+                    # Your existing response processing code...
                     
-                    # If suggestions don't contain pipes, try to split by common separators
-                    if '|' not in suggestions:
-                        # Try splitting by periods, commas, or line breaks
-                        if '.' in suggestions:
-                            suggestion_parts = [s.strip() for s in suggestions.split('.') if s.strip()]
-                            suggestions = '|'.join(suggestion_parts[:3])
-                        elif ',' in suggestions:
-                            suggestion_parts = [s.strip() for s in suggestions.split(',') if s.strip()]
-                            suggestions = '|'.join(suggestion_parts[:3])
-                        else:
-                            # Fallback if parsing fails
-                            suggestions = "Try a 5-minute meditation|Practice deep breathing|Learn stress relief techniques"
-                    
-                else:
-                    assistant_reply = full_response
-                    suggestions = "Try a 5-minute meditation|Practice box breathing|Learn grounding techniques"
-                
-            except Exception as e:
-                assistant_reply = "Sorry, there was an error generating a response. Please try again."
-                suggestions = "Try a 5-minute meditation|Practice box breathing|Try deep breathing"
+                except Exception as e:
+                    logger.error(f"OpenAI API Error: {str(e)}")
+                    assistant_reply = f"API Error: {str(e)}"
+                    suggestions = "Try again|Contact support|Check connection"
             
-            # Save to DB
+            # Save to DB (your existing code)
             chat_entry = ChatHistory(
                 user_id=current_user.id, 
                 message=user_message, 
