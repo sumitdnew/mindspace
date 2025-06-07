@@ -1,0 +1,136 @@
+/* General Page Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f2f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+/* Branding Header */
+header {
+    background-color: #2e5aac;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Chat Container */
+.chat-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Chat Bubbles */
+.chat {
+    display: flex;
+    margin: 10px 0;
+}
+
+.user .message {
+    margin-left: auto;
+    background: #d6eaff;
+    color: #000;
+}
+
+.bot .message {
+    margin-right: auto;
+    background: #e6e6e6;
+    color: #333;
+}
+
+.message {
+    padding: 12px 18px;
+    border-radius: 20px;
+    max-width: 70%;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Chat Form */
+form {
+    display: flex;
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+}
+
+button {
+    padding: 12px 20px;
+    margin-left: 10px;
+    background-color: #2e5aac;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #1c3e80;
+}
+
+/* Login/Register Form */
+.auth-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2e5aac;
+}
+
+.auth-container input[type="text"],
+.auth-container input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.auth-container button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: #2e5aac;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.auth-container button:hover {
+    background-color: #1c3e80;
+}
+
+/* Greeting */
+.greeting {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-align: center;
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood History - MindSpace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mood-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .stat-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .mood-timeline {
+            margin-bottom: 2rem;
+        }
+        
+        .mood-entry {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .mood-emoji {
+            font-size: 1.5rem;
+        }
+        
+        .mood-details {
+            flex: 1;
+        }
+        
+        .mood-date {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .mood-notes {
+            color: #666;
+            font-style: italic;
+            margin-top: 0.25rem;
+        }
+        
+        .no-moods {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .insights {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .insights h3 {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Your Mood Journey</h1>
+            <p>Track your emotional wellness over time</p>
+        </div>
+        
+        {% if moods %}
+        <div class="mood-stats">
+            <div class="stat-card">
+                <div class="stat-emoji">😞</div>
+                <div class="stat-count">{{ moods|selectattr('mood_score', 'equalto', 1)|list|length }}</div>
+                <div>Struggling</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-emoji">😐</div>
+                <div class="stat-count">{{ moods|selectattr('mood_score', 'equalto', 2)|list|length }}</div>
+                <div>Okay</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-emoji">🙂</div>
+                <div class="stat-count">{{ moods|selectattr('mood_score', 'equalto', 3)|list|length }}</div>
+                <div>Good</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-emoji">😃</div>
+                <div class="stat-count">{{ moods|selectattr('mood_score', 'equalto', 4)|list|length }}</div>
+                <div>Great</div>
+            </div>
+        </div>
+        
+        <div class="insights">
+            <h3>💡 Insight</h3>
+            <p>You've logged {{ moods|length }} mood entries. Keep tracking to notice patterns and celebrate your progress!</p>
+        </div>
+        
+        <div class="mood-timeline">
+            <h3 style="color: #667eea; margin-bottom: 1rem;">Recent Mood Entries</h3>
+            {% for mood in moods %}
+            <div class="mood-entry">
+                <div class="mood-emoji">
+                    {% if mood.mood_score == 1 %}😞
+                    {% elif mood.mood_score == 2 %}😐
+                    {% elif mood.mood_score == 3 %}🙂
+                    {% else %}😃
+                    {% endif %}
+                </div>
+                <div class="mood-details">
+                    <div class="mood-date">{{ mood.timestamp.strftime('%B %d, %Y at %I:%M %p') }}</div>
+                    {% if mood.notes %}
+                    <div class="mood-notes">"{{ mood.notes }}"</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-moods">
+            <p>No mood entries yet. Start tracking your mood to see your emotional journey!</p>
+        </div>
+        {% endif %}
+        
+        <div style="text-align: center;">
+            <a href="{{ url_for('chat') }}" class="back-btn">Back to Chat</a>
+        </div>
+    </div>
+</body>
+</html>
