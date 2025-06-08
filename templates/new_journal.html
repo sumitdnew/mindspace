@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindSpace - New Journal Entry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .journal-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 300px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .mood-selector {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .mood-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .mood-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .mood-option.selected {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        
+        .mood-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mood-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .mood-option input[type="radio"] {
+            display: none;
+        }
+        
+        .tags-input {
+            position: relative;
+        }
+        
+        .tags-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .tag-suggestion {
+            background: #f0f2ff;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #667eea;
+        }
+        
+        .tag-suggestion:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .writing-tips {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .writing-tips h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .tips-list {
+            list-style: none;
+        }
+        
+        .tips-list li {
+            color: #555;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .tips-list li:before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+        
+        .character-count {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .inspiration {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .inspiration h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .inspiration p {
+            font-style: italic;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .prompt-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .prompt-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✍️ New Journal Entry</h1>
+            <p>Take a moment to reflect on your thoughts and feelings</p>
+        </div>
+        
+        <div class="inspiration">
+            <h3>🌟 Today's Inspiration</h3>
+            <p id="dailyQuote">"The journey of a thousand miles begins with a single step." - Lao Tzu</p>
+            <button type="button" class="prompt-button" onclick="getRandomPrompt()">💡 Get Writing Prompt</button>
+        </div>
+        
+        <form method="POST" class="journal-form">
+            <div class="form-group">
+                <label for="title">📝 Entry Title</label>
+                <input type="text" id="title" name="title" placeholder="Give your entry a meaningful title..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">💭 Your Thoughts</label>
+                <textarea id="content" name="content" placeholder="Pour your heart out... What's on your mind today? How are you feeling? What happened? What are you grateful for?" required></textarea>
+                <div class="character-count">
+                    <span id="charCount">0</span> characters
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>😊 How are you feeling right now? (Optional)</label>
+                <div class="mood-selector">
+                    <label class="mood-option">
+                        <input type="radio" name="mood_score" value="1">
+                        <div class="mood-emoji">😞</div>
+                        <div class="mood-label">Struggling</div>
+                    </label>
+                    <label class="mood-option">
+                        <input type="radio" name="mood_score" value="2">
+                        <div class="mood-emoji">😐</div>
+                        <div class="mood-label">Okay</div>
+                    </label>
+                    <label class="mood-option">
+                        <input type="radio" name="mood_score" value="3">
+                        <div class="mood-emoji">🙂</div>
+                        <div class="mood-label">Good</div>
+                    </label>
+                    <label class="mood-option">
+                        <input type="radio" name="mood_score" value="4">
+                        <div class="mood-emoji">😃</div>
+                        <div class="mood-label">Great</div>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="tags">🏷️ Tags (Optional)</label>
+                <input type="text" id="tags" name="tags" placeholder="Add tags separated by commas (e.g., gratitude, work, family, anxiety)">
+                <div class="tags-suggestions">
+                    <span class="tag-suggestion" onclick="addTag('gratitude')">gratitude</span>
+                    <span class="tag-suggestion" onclick="addTag('work')">work</span>
+                    <span class="tag-suggestion" onclick="addTag('family')">family</span>
+                    <span class="tag-suggestion" onclick="addTag('anxiety')">anxiety</span>
+                    <span class="tag-suggestion" onclick="addTag('progress')">progress</span>
+                    <span class="tag-suggestion" onclick="addTag('reflection')">reflection</span>
+                    <span class="tag-suggestion" onclick="addTag('goals')">goals</span>
+                    <span class="tag-suggestion" onclick="addTag('self-care')">self-care</span>
+                </div>
+            </div>
+            
+            <div class="writing-tips">
+                <h3>💡 Writing Tips</h3>
+                <ul class="tips-list">
+                    <li>Write freely without worrying about grammar or structure</li>
+                    <li>Be honest about your feelings - this is your safe space</li>
+                    <li>Include specific details about your day or experiences</li>
+                    <li>Note any patterns in your thoughts or behaviors</li>
+                    <li>End with something you're grateful for or looking forward to</li>
+                </ul>
+            </div>
+            
+            <div class="form-actions">
+                <a href="{{ url_for('journal') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Entry ✨</button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // Character counter
+        const contentTextarea = document.getElementById('content');
+        const charCount = document.getElementById('charCount');
+        
+        contentTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+        
+        // Mood selection
+        const moodOptions = document.querySelectorAll('.mood-option');
+        moodOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                moodOptions.forEach(opt => opt.classList.remove('selected'));
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                // Check the radio button
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+        
+        // Tag suggestions
+        function addTag(tag) {
+            const tagsInput = document.getElementById('tags');
+            const currentTags = tagsInput.value.trim();
+            
+            if (currentTags === '') {
+                tagsInput.value = tag;
+            } else if (!currentTags.split(',').map(t => t.trim()).includes(tag)) {
+                tagsInput.value = currentTags + ', ' + tag;
+            }
+        }
+        
+        // Writing prompts
+        const prompts = [
+            "What am I most grateful for right now?",
+            "How did I grow today, even in small ways?",
+            "What challenge am I facing and how can I approach it differently?",
+            "What would I tell my past self about this situation?",
+            "What made me smile today?",
+            "How am I taking care of myself lately?",
+            "What patterns am I noticing in my thoughts?",
+            "What do I need to forgive myself for?",
+            "How do I want to feel tomorrow?",
+            "What's one thing I learned about myself this week?",
+            "Who or what am I most grateful for right now?",
+            "What boundaries do I need to set or maintain?",
+            "How can I be kinder to myself?",
+            "What progress have I made that I haven't acknowledged?",
+            "What would self-compassion look like in this situation?"
+        ];
+        
+        const quotes = [
+            '"The journey of a thousand miles begins with a single step." - Lao Tzu',
+            '"You are braver than you believe, stronger than you seem, and smarter than you think." - A.A. Milne',
+            '"Mental health is not a destination, but a process." - Noam Shpancer',
+            '"Your mental health is a priority. Your happiness is essential. Your self-care is a necessity." - Unknown',
+            '"Healing is not about moving on or forgetting the past; it is about learning to live with the reality of the past." - Nalaka',
+            '"You don\'t have to be positive all the time. It\'s perfectly okay to feel sad, angry, annoyed, frustrated, scared and anxious." - Lori Deschene',
+            '"Take time to make your soul happy." - Unknown',
+            '"Your current situation is not your final destination." - Unknown'
+        ];
+        
+        function getRandomPrompt() {
+            const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+            const promptButton = document.querySelector('.prompt-button');
+            const originalText = promptButton.textContent;
+            
+            // Update the content textarea with the prompt
+            const contentTextarea = document.getElementById('content');
+            if (contentTextarea.value.trim() === '') {
+                contentTextarea.value = randomPrompt + '\n\n';
+                contentTextarea.focus();
+                // Update character count
+                charCount.textContent = contentTextarea.value.length;
+            } else {
+                contentTextarea.value += '\n\n' + randomPrompt + '\n\n';
+                charCount.textContent = contentTextarea.value.length;
+            }
+            
+            // Show feedback
+            promptButton.textContent = '✨ Prompt added!';
+            setTimeout(() => {
+                promptButton.textContent = originalText;
+            }, 2000);
+        }
+        
+        // Auto-save draft functionality (optional enhancement)
+        let autoSaveTimer;
+        const titleInput = document.getElementById('title');
+        
+        function autoSave() {
+            const title = titleInput.value;
+            const content = contentTextarea.value;
+            
+            if (title.trim() || content.trim()) {
+                localStorage.setItem('journal_draft', JSON.stringify({
+                    title: title,
+                    content: content,
+                    timestamp: new Date().toISOString()
+                }));
+            }
+        }
+        
+        // Load draft on page load
+        window.addEventListener('load', function() {
+            const draft = localStorage.getItem('journal_draft');
+            if (draft) {
+                try {
+                    const draftData = JSON.parse(draft);
+                    const draftAge = new Date() - new Date(draftData.timestamp);
+                    
+                    // Only restore if draft is less than 24 hours old
+                    if (draftAge < 24 * 60 * 60 * 1000) {
+                        if (confirm('Found a saved draft from earlier. Would you like to restore it?')) {
+                            titleInput.value = draftData.title || '';
+                            contentTextarea.value = draftData.content || '';
+                            charCount.textContent = contentTextarea.value.length;
+                        }
+                    }
+                } catch (e) {
+                    console.log('Error loading draft:', e);
+                }
+            }
+        });
+        
+        // Auto-save while typing
+        [titleInput, contentTextarea].forEach(input => {
+            input.addEventListener('input', function() {
+                clearTimeout(autoSaveTimer);
+                autoSaveTimer = setTimeout(autoSave, 3000); // Save after 3 seconds of inactivity
+            });
+        });
+        
+        // Clear draft when form is submitted
+        document.querySelector('.journal-form').addEventListener('submit', function() {
+            localStorage.removeItem('journal_draft');
+        });
+        
+        // Random quote on load
+        window.addEventListener('load', function() {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('dailyQuote').textContent = randomQuote;
+        });
+    </script>
+</body>
+</html>

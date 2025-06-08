@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindSpace - Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 6px;
+            border: 1px solid #667eea;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .journal-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .journal-header h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2.2rem;
+        }
+        
+        .journal-header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .journal-stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .new-entry-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .new-entry-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .journal-entries {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .journal-entry {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .journal-entry:hover {
+            transform: translateY(-2px);
+        }
+        
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .entry-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+        
+        .entry-date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .entry-mood {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .mood-score {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .entry-preview {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .entry-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .tag {
+            background: #f0f2ff;
+            color: #667eea;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .read-more {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .read-more:hover {
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .empty-state h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .empty-state p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .journal-prompts {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+        
+        .journal-prompts h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .prompt-list {
+            list-style: none;
+            display: grid;
+            gap: 0.5rem;
+        }
+        
+        .prompt-item {
+            color: #555;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .prompt-item:last-child {
+            border-bottom: none;
+        }
+        
+        .flash-messages {
+            margin-bottom: 1rem;
+        }
+        
+        .flash-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📖 MindSpace Journal</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('chat') }}" class="nav-link">💬 Chat</a>
+            <a href="{{ url_for('mood_history') }}" class="nav-link">📊 Mood</a>
+            <a href="{{ url_for('goals') }}" class="nav-link">🎯 Goals</a>
+            <a href="{{ url_for('insights') }}" class="nav-link">📈 Insights</a>
+            <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="journal-header">
+            <h2>✍️ Your Journal</h2>
+            <p>Express your thoughts, track your progress, and reflect on your journey</p>
+            
+            <div class="journal-stats">
+                <div class="stat">
+                    <div class="stat-number">{{ entries|length }}</div>
+                    <div class="stat-label">Total Entries</div>
+                </div>
+                <div class="stat">
+    <div class="stat-number">
+        {{ entries|length if entries|length < 10 else (entries|length // 4) }}
+    </div>
+    <div class="stat-label">This Week</div>
+</div>
+                <div class="stat">
+                    <div class="stat-number">
+                        {% if entries %}
+                            {{ entries[0].timestamp.strftime('%d') }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </div>
+                    <div class="stat-label">Days Since Last</div>
+                </div>
+            </div>
+            
+            <a href="{{ url_for('new_journal_entry') }}" class="new-entry-btn">✨ New Entry</a>
+        </div>
+        
+        {% if entries %}
+            <div class="journal-entries">
+                {% for entry in entries %}
+                    <div class="journal-entry">
+                        <div class="entry-header">
+                            <div>
+                                <div class="entry-title">{{ entry.title }}</div>
+                                <div class="entry-date">{{ entry.timestamp.strftime('%B %d, %Y at %I:%M %p') }}</div>
+                            </div>
+                            {% if entry.mood_score %}
+                                <div class="entry-mood">
+                                    {% if entry.mood_score == 1 %}😞
+                                    {% elif entry.mood_score == 2 %}😐
+                                    {% elif entry.mood_score == 3 %}🙂
+                                    {% elif entry.mood_score == 4 %}😃
+                                    {% endif %}
+                                    <span class="mood-score">({{ entry.mood_score }}/4)</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="entry-preview">
+                            {{ entry.content[:200] }}{% if entry.content|length > 200 %}...{% endif %}
+                        </div>
+                        
+                        {% if entry.tags %}
+                            <div class="entry-tags">
+                                {% for tag in entry.tags.split(',') %}
+                                    {% if tag.strip() %}
+                                        <span class="tag">{{ tag.strip() }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <a href="{{ url_for('view_journal_entry', entry_id=entry.id) }}" class="read-more">Read Full Entry →</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>🌱 Start Your Journaling Journey</h3>
+                <p>Writing in a journal can help you process emotions, track patterns, and celebrate progress. Your first entry is just a click away!</p>
+                <a href="{{ url_for('new_journal_entry') }}" class="new-entry-btn">Write Your First Entry</a>
+                
+                <div class="journal-prompts">
+                    <h4>💡 Writing Prompts to Get You Started:</h4>
+                    <ul class="prompt-list">
+                        <li class="prompt-item">• How am I feeling right now, and what might be contributing to that?</li>
+                        <li class="prompt-item">• What am I grateful for today?</li>
+                        <li class="prompt-item">• What challenge did I face today and how did I handle it?</li>
+                        <li class="prompt-item">• What's one thing I learned about myself this week?</li>
+                        <li class="prompt-item">• How do I want to feel tomorrow, and what can I do to support that?</li>
+                        <li class="prompt-item">• What patterns am I noticing in my thoughts or behaviors?</li>
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

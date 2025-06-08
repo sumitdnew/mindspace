@@ -692,11 +692,14 @@
 <body>
     <div class="header">
         <h1>🧘‍♀️ MindSpace</h1>
-        <div class="user-info">
-            <span>Welcome back!</span>
-            <a href="{{ url_for('mood_history') }}" class="mood-link">📊 Mood History</a>
-            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
-        </div>
+       <div class="user-info">
+    <span>Welcome back!</span>
+    <a href="{{ url_for('journal') }}" class="mood-link">📖 Journal</a>
+    <a href="{{ url_for('goals') }}" class="mood-link">🎯 Goals</a>
+    <a href="{{ url_for('insights') }}" class="mood-link">📈 Insights</a>
+    <a href="{{ url_for('mood_history') }}" class="mood-link">📊 Mood History</a>
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+</div>
         
         <!-- Hidden Mood Tracker (shows when needed) -->
         <div class="mood-tracker" id="moodTracker" style="display: none;">

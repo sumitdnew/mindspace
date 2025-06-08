@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindSpace - New Goal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .goal-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .category-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            text-align: center;
+        }
+        
+        .category-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .category-option.selected {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+        
+        .category-desc {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .category-option input[type="radio"] {
+            display: none;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .goal-tips {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .goal-tips h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .tips-list {
+            list-style: none;
+        }
+        
+        .tips-list li {
+            color: #555;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .tips-list li:before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+        
+        .inspiration {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .inspiration h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .inspiration p {
+            font-style: italic;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .goal-examples {
+            background: #f0f2ff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .goal-examples h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .example-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .example-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+        
+        .example-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .char-counter {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Create New Goal</h1>
+            <p>Set a meaningful goal to support your mental health journey</p>
+        </div>
+        
+        <div class="inspiration">
+            <h3>🌟 Goal Setting Inspiration</h3>
+            <p>"A goal is not always meant to be reached; it often serves simply as something to aim toward." - Bruce Lee</p>
+        </div>
+        
+        <form method="POST" class="goal-form">
+            <div class="form-group">
+                <label for="title">🎯 Goal Title</label>
+                <input type="text" id="title" name="title" placeholder="E.g., Meditate daily for 10 minutes" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">📝 Description (Optional)</label>
+                <textarea id="description" name="description" placeholder="Describe why this goal is important to you and how you plan to achieve it..."></textarea>
+                <div class="char-counter">
+                    <span id="descCharCount">0</span> characters
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>🏷️ Goal Category</label>
+                <div class="category-selector">
+                    <label class="category-option">
+                        <input type="radio" name="category" value="meditation" required>
+                        <div class="category-icon">🧘‍♀️</div>
+                        <div class="category-label">Meditation</div>
+                        <div class="category-desc">Mindfulness & meditation practice</div>
+                    </label>
+                    <label class="category-option">
+                        <input type="radio" name="category" value="mental_health" required>
+                        <div class="category-icon">💙</div>
+                        <div class="category-label">Mental Health</div>
+                        <div class="category-desc">Overall emotional wellness</div>
+                    </label>
+                    <label class="category-option">
+                        <input type="radio" name="category" value="exercise" required>
+                        <div class="category-icon">🏃‍♀️</div>
+                        <div class="category-label">Exercise</div>
+                        <div class="category-desc">Physical activity & fitness</div>
+                    </label>
+                    <label class="category-option">
+                        <input type="radio" name="category" value="sleep" required>
+                        <div class="category-icon">😴</div>
+                        <div class="category-label">Sleep</div>
+                        <div class="category-desc">Better sleep habits</div>
+                    </label>
+                    <label class="category-option">
+                        <input type="radio" name="category" value="journaling" required>
+                        <div class="category-icon">📖</div>
+                        <div class="category-label">Journaling</div>
+                        <div class="category-desc">Reflection & writing</div>
+                    </label>
+                    <label class="category-option">
+                        <input type="radio" name="category" value="social" required>
+                        <div class="category-icon">👥</div>
+                        <div class="category-label">Social</div>
+                        <div class="category-desc">Relationships & connections</div>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="target_value">🎯 Target Number (Optional)</label>
+                    <input type="number" id="target_value" name="target_value" placeholder="E.g., 30 for 30 days" min="1">
+                    <small style="color: #666;">How many times or how much?</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="target_date">📅 Target Date (Optional)</label>
+                    <input type="date" id="target_date" name="target_date">
+                    <small style="color: #666;">When do you want to achieve this?</small>
+                </div>
+            </div>
+            
+            <div class="goal-tips">
+                <h3>💡 Tips for Effective Goals</h3>
+                <ul class="tips-list">
+                    <li>Make your goal specific and measurable</li>
+                    <li>Start small - better to succeed with a small goal than fail with a big one</li>
+                    <li>Focus on habits and actions, not just outcomes</li>
+                    <li>Set a realistic timeframe that motivates without overwhelming</li>
+                    <li>Connect your goal to your values and why it matters to you</li>
+                </ul>
+            </div>
+            
+            <div class="form-actions">
+                <a href="{{ url_for('goals') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Goal ✨</button>
+            </div>
+        </form>
+        
+        <div class="goal-examples">
+            <h3>🌟 Goal Examples for Inspiration</h3>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <div class="example-title">Daily Meditation</div>
+                    <div class="example-desc">Meditate for 10 minutes every morning for 30 days</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-title">Weekly Journaling</div>
+                    <div class="example-desc">Write 3 journal entries per week for a month</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-title">Mood Tracking</div>
+                    <div class="example-desc">Log my mood every day for 2 weeks</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-title">Exercise Routine</div>
+                    <div class="example-desc">Take a 20-minute walk 4 times per week</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-title">Better Sleep</div>
+                    <div class="example-desc">Go to bed by 10 PM for 7 consecutive nights</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-title">Social Connection</div>
+                    <div class="example-desc">Call a friend or family member twice a week</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Character counter for description
+        const descTextarea = document.getElementById('description');
+        const descCharCount = document.getElementById('descCharCount');
+        
+        descTextarea.addEventListener('input', function() {
+            descCharCount.textContent = this.value.length;
+        });
+        
+        // Category selection
+        const categoryOptions = document.querySelectorAll('.category-option');
+        categoryOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                categoryOptions.forEach(opt => opt.classList.remove('selected'));
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                // Check the radio button
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+        
+        // Set minimum date to today
+        const targetDateInput = document.getElementById('target_date');
+        const today = new Date().toISOString().split('T')[0];
+        targetDateInput.min = today;
+        
+        // Form validation and enhancement
+        document.querySelector('.goal-form').addEventListener('submit', function(e) {
+            const title = document.getElementById('title').value.trim();
+            const category = document.querySelector('input[name="category"]:checked');
+            
+            if (!title) {
+                e.preventDefault();
+                alert('Please enter a goal title.');
+                document.getElementById('title').focus();
+                return;
+            }
+            
+            if (!category) {
+                e.preventDefault();
+                alert('Please select a category for your goal.');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.querySelector('.btn-primary');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Creating Goal...';
+            submitBtn.disabled = true;
+            
+            // Re-enable if there's an error (this won't run if form submits successfully)
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 5000);
+        });
+        
+        // Auto-suggest target values based on category
+        categoryOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const category = this.querySelector('input[type="radio"]').value;
+                const targetValueInput = document.getElementById('target_value');
+                
+                // Suggest common target values for different categories
+                const suggestions = {
+                    'meditation': 30, // 30 days
+                    'mental_health': 7, // 1 week
+                    'exercise': 12, // 3 times a week for 4 weeks
+                    'sleep': 14, // 2 weeks
+                    'journaling': 10, // 10 entries
+                    'social': 8 // twice a week for 4 weeks
+                };
+                
+                if (suggestions[category] && !targetValueInput.value) {
+                    targetValueInput.placeholder = `Suggested: ${suggestions[category]}`;
+                }
+            });
+        });
+        
+        // Add some visual feedback for form completion
+        const requiredFields = document.querySelectorAll('input[required], select[required]');
+        requiredFields.forEach(field => {
+            field.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.style.borderColor = '#28a745';
+                } else {
+                    this.style.borderColor = '#e0e0e0';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

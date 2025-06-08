@@ -130,10 +130,60 @@
         .insights h3 {
             margin-bottom: 0.5rem;
         }
+
+.header {
+    background: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    color: #667eea;
+    font-size: 1.8rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.nav-link {
+    padding: 8px 16px;
+    background: #f8f9fa;
+    color: #667eea;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 1px solid #667eea;
+    transition: all 0.3s;
+}
+
+.nav-link:hover {
+    background: #667eea;
+    color: white;
+}
+
+
+
+
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="header">
+    <h1>📊 MindSpace Mood</h1>
+    <div class="nav-links">
+        <a href="{{ url_for('chat') }}" class="nav-link">💬 Chat</a>
+        <a href="{{ url_for('journal') }}" class="nav-link">📖 Journal</a>
+        <a href="{{ url_for('goals') }}" class="nav-link">🎯 Goals</a>
+        <a href="{{ url_for('insights') }}" class="nav-link">📈 Insights</a>
+        <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+    </div>
+</div>   
+
+ <div class="container">
         <div class="header">
             <h1>📊 Your Mood Journey</h1>
             <p>Track your emotional wellness over time</p>

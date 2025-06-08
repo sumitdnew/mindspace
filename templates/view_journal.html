@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ entry.title }} - MindSpace Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 6px;
+            border: 1px solid #667eea;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .entry-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .entry-title {
+            color: #667eea;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        
+        .entry-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .meta-icon {
+            font-size: 1.2rem;
+        }
+        
+        .mood-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .mood-emoji {
+            font-size: 1.5rem;
+        }
+        
+        .mood-text {
+            font-weight: 500;
+            color: #667eea;
+        }
+        
+        .entry-tags {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .tag {
+            background: #f0f2ff;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .entry-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .content-text {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .entry-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+        
+        .reflection-prompt {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .reflection-prompt h3 {
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .reflection-prompt p {
+            opacity: 0.95;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .prompt-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .prompt-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .prompt-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+        
+        .reading-stats {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .reading-stats h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .motivational-quote {
+            background: #f0f2ff;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: #555;
+        }
+        
+        .quote-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .quote-author {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .entry-meta {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .entry-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📖 MindSpace Journal</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('chat') }}" class="nav-link">💬 Chat</a>
+            <a href="{{ url_for('journal') }}" class="nav-link">📖 Journal</a>
+            <a href="{{ url_for('goals') }}" class="nav-link">🎯 Goals</a>
+            <a href="{{ url_for('mood_history') }}" class="nav-link">📊 Mood</a>
+            <a href="{{ url_for('insights') }}" class="nav-link">📈 Insights</a>
+            <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="entry-header">
+            <h1 class="entry-title">{{ entry.title }}</h1>
+            
+            <div class="entry-meta">
+                <div class="meta-item">
+                    <span class="meta-icon">📅</span>
+                    <span>{{ entry.timestamp.strftime('%B %d, %Y') }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">⏰</span>
+                    <span>{{ entry.timestamp.strftime('%I:%M %p') }}</span>
+                </div>
+                {% if entry.mood_score %}
+                    <div class="meta-item">
+                        <div class="mood-display">
+                            <span class="mood-emoji">
+                                {% if entry.mood_score == 1 %}😞
+                                {% elif entry.mood_score == 2 %}😐
+                                {% elif entry.mood_score == 3 %}🙂
+                                {% elif entry.mood_score == 4 %}😃
+                                {% endif %}
+                            </span>
+                            <span class="mood-text">
+                                {% if entry.mood_score == 1 %}Struggling
+                                {% elif entry.mood_score == 2 %}Okay
+                                {% elif entry.mood_score == 3 %}Good
+                                {% elif entry.mood_score == 4 %}Great
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            {% if entry.tags %}
+                <div class="entry-tags">
+                    {% for tag in entry.tags.split(',') %}
+                        {% if tag.strip() %}
+                            <span class="tag">{{ tag.strip() }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="reading-stats">
+            <h4>📊 Entry Stats</h4>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">{{ entry.content|length }}</div>
+                    <div class="stat-label">Characters</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ entry.content.split()|length }}</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ ((entry.content.split()|length / 200) * 60)|round|int }}</div>
+                    <div class="stat-label">Seconds to Read</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="entry-content">
+            <div class="content-text">{{ entry.content }}</div>
+        </div>
+        
+        <div class="motivational-quote">
+            <div class="quote-text">"The act of writing is the act of discovering what you believe."</div>
+            <div class="quote-author">— David Hare</div>
+        </div>
+        
+        <div class="reflection-prompt">
+            <h3>✨ Continue Your Journey</h3>
+            <p>Reflection deepens understanding. How has your perspective evolved since writing this?</p>
+            <div class="prompt-actions">
+                <a href="{{ url_for('new_journal_entry') }}" class="prompt-btn">📝 Write New Entry</a>
+                <a href="{{ url_for('goals') }}" class="prompt-btn">🎯 Set Related Goal</a>
+                <a href="{{ url_for('chat') }}" class="prompt-btn">💬 Discuss with AI</a>
+            </div>
+        </div>
+        
+        <div class="entry-actions">
+            <a href="{{ url_for('journal') }}" class="btn btn-primary">← Back to Journal</a>
+            <a href="{{ url_for('new_journal_entry') }}" class="btn btn-success">✍️ New Entry</a>
+            <a href="{{ url_for('chat') }}" class="btn btn-secondary">💬 Chat About This</a>
+        </div>
+    </div>
+    
+    <script>
+        // Add reading time estimation
+        window.addEventListener('load', function() {
+            const content = document.querySelector('.content-text').textContent;
+            const wordCount = content.split(/\s+/).length;
+            const readingTime = Math.ceil(wordCount / 200); // Average reading speed
+            
+            // You could add this to the stats if desired
+            console.log(`Estimated reading time: ${readingTime} minute(s)`);
+        });
+        
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Add some interactive elements
+        const entryContent = document.querySelector('.content-text');
+        if (entryContent) {
+            // Add click-to-highlight functionality for long entries
+            entryContent.addEventListener('mouseup', function() {
+                const selection = window.getSelection();
+                if (selection.toString().length > 0) {
+                    // Could add highlighting functionality here
+                    console.log('Selected text:', selection.toString());
+                }
+            });
+        }
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Escape key to go back to journal
+            if (e.key === 'Escape') {
+                window.location.href = "{{ url_for('journal') }}";
+            }
+            // N key to create new entry
+            if (e.key === 'n' && !e.ctrlKey && !e.metaKey) {
+                if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    window.location.href = "{{ url_for('new_journal_entry') }}";
+                }
+            }
+        });
+    </script>
+</body>
+</html>

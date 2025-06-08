@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindSpace - Insights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 6px;
+            border: 1px solid #667eea;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .insights-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .insights-header h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2.2rem;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .insight-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .insight-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .insight-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .insight-label {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .insight-description {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .mood-trend {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .mood-trend h3 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .trend-icon {
+            font-size: 2rem;
+        }
+        
+        .trend-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .trend-improving {
+            color: #28a745;
+        }
+        
+        .trend-declining {
+            color: #dc3545;
+        }
+        
+        .trend-stable {
+            color: #667eea;
+        }
+        
+        .chart-container {
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .personal-insights {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .personal-insights h3 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .insights-list {
+            list-style: none;
+        }
+        
+        .insight-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .insight-item-icon {
+            font-size: 1.5rem;
+            min-width: 40px;
+        }
+        
+        .insight-item-text {
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .activity-summary {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .activity-summary h3 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .activity-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+        }
+        
+        .activity-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .activity-count {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+        
+        .activity-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .recommendations {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+        
+        .recommendations h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .recommendation-list {
+            list-style: none;
+        }
+        
+        .recommendation-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .recommendation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .recommendation-icon {
+            font-size: 1.2rem;
+            min-width: 30px;
+        }
+        
+        .recommendation-text {
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .view-details-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .view-details-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .empty-insights {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .empty-insights h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .empty-insights p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .get-started-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .time-period-selector {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .period-btn {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            color: #667eea;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .period-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .period-btn:hover {
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📈 MindSpace Insights</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('chat') }}" class="nav-link">💬 Chat</a>
+            <a href="{{ url_for('journal') }}" class="nav-link">📖 Journal</a>
+            <a href="{{ url_for('goals') }}" class="nav-link">🎯 Goals</a>
+            <a href="{{ url_for('mood_history') }}" class="nav-link">📊 Mood</a>
+            <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if data.total_mood_entries > 0 %}
+            <div class="insights-header">
+                <h2>🔍 Your Personal Insights</h2>
+                <p>Understanding your patterns and celebrating your progress</p>
+                
+                <div class="time-period-selector">
+                    <button class="period-btn active" onclick="selectPeriod('30days')">Last 30 Days</button>
+                    <button class="period-btn" onclick="selectPeriod('7days')">Last 7 Days</button>
+                    <button class="period-btn" onclick="selectPeriod('90days')">Last 3 Months</button>
+                </div>
+            </div>
+            
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-icon">📊</div>
+                    <div class="insight-value">{{ data.total_mood_entries }}</div>
+                    <div class="insight-label">Mood Check-ins</div>
+                    <div class="insight-description">Great consistency in tracking!</div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">
+                        {% if data.average_mood >= 3.5 %}😊
+                        {% elif data.average_mood >= 2.5 %}🙂
+                        {% else %}💙{% endif %}
+                    </div>
+                    <div class="insight-value">{{ data.average_mood }}/4</div>
+                    <div class="insight-label">Average Mood</div>
+                    <div class="insight-description">
+                        {% if data.average_mood >= 3.5 %}Consistently positive
+                        {% elif data.average_mood >= 2.5 %}Stable and balanced
+                        {% else %}Room for improvement{% endif %}
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">💬</div>
+                    <div class="insight-value">{{ data.total_chat_sessions }}</div>
+                    <div class="insight-label">Chat Sessions</div>
+                    <div class="insight-description">Active engagement with support</div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">✍️</div>
+                    <div class="insight-value">{{ data.total_journal_entries }}</div>
+                    <div class="insight-label">Journal Entries</div>
+                    <div class="insight-description">
+                        {% if data.total_journal_entries >= 10 %}Excellent reflection habit
+                        {% elif data.total_journal_entries >= 3 %}Good progress
+                        {% else %}Consider writing more{% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mood-trend">
+                <h3>📈 Mood Trend Analysis</h3>
+                <div class="trend-indicator">
+                    <div class="trend-icon">
+                        {% if data.mood_trend == 'improving' %}📈
+                        {% elif data.mood_trend == 'declining' %}📉
+                        {% else %}➡️{% endif %}
+                    </div>
+                    <div class="trend-text {% if data.mood_trend == 'improving' %}trend-improving{% elif data.mood_trend == 'declining' %}trend-declining{% else %}trend-stable{% endif %}">
+                        {% if data.mood_trend == 'improving' %}Your mood is improving! 🌟
+                        {% elif data.mood_trend == 'declining' %}Your mood needs some attention 💙
+                        {% else %}Your mood is stable 🌊{% endif %}
+                    </div>
+                </div>
+                
+                <div class="chart-container" id="moodChart">
+                    <div>
+                        <canvas id="moodTrendChart" width="400" height="200"></canvas>
+                        <p style="margin-top: 1rem; color: #666;">Interactive mood chart showing your recent patterns</p>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('mood_history') }}" class="view-details-btn">View Detailed Analytics</a>
+            </div>
+            
+            <div class="personal-insights">
+                <h3>🧠 Personal Insights</h3>
+                <ul class="insights-list">
+                    {% for insight in data.insights %}
+                        <li class="insight-item">
+                            <div class="insight-item-icon">
+                                {% if '🌟' in insight %}🌟
+                                {% elif '💪' in insight %}💪
+                                {% elif '📱' in insight %}📱
+                                {% elif '✍️' in insight %}✍️
+                                {% elif '📝' in insight %}📝
+                                {% elif '📔' in insight %}📔
+                                {% elif '🌅' in insight %}🌅
+                                {% elif '🌙' in insight %}🌙
+                                {% elif '💙' in insight %}💙
+                                {% else %}💡{% endif %}
+                            </div>
+                            <div class="insight-item-text">{{ insight }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="activity-summary">
+                <h3>📋 Activity Summary</h3>
+                <div class="activity-grid">
+                    <div class="activity-item">
+                        <div class="activity-icon">📊</div>
+                        <div class="activity-count">{{ data.total_mood_entries }}</div>
+                        <div class="activity-label">Mood Entries</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">💬</div>
+                        <div class="activity-count">{{ data.total_chat_sessions }}</div>
+                        <div class="activity-label">Support Sessions</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">✍️</div>
+                        <div class="activity-count">{{ data.total_journal_entries }}</div>
+                        <div class="activity-label">Journal Entries</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">📈</div>
+                        <div class="activity-count">{{ ((data.average_mood / 4) * 100)|round|int }}%</div>
+                        <div class="activity-label">Wellness Score</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>🎯 Personalized Recommendations</h3>
+                <ul class="recommendation-list">
+                    {% if data.mood_trend == 'declining' %}
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">🧘‍♀️</div>
+                            <div class="recommendation-text">Try daily meditation to help stabilize your mood</div>
+                        </li>
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">💬</div>
+                            <div class="recommendation-text">Consider reaching out to friends or family for support</div>
+                        </li>
+                    {% elif data.mood_trend == 'improving' %}
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">🌟</div>
+                            <div class="recommendation-text">Keep up the great work! Your positive trend is inspiring</div>
+                        </li>
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">📝</div>
+                            <div class="recommendation-text">Document what's working well in your journal</div>
+                        </li>
+                    {% endif %}
+                    
+                    {% if data.total_journal_entries < 5 %}
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">✍️</div>
+                            <div class="recommendation-text">Try journaling more frequently to better understand your patterns</div>
+                        </li>
+                    {% endif %}
+                    
+                    {% if data.average_mood < 2.5 %}
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">🎯</div>
+                            <div class="recommendation-text">Set small, achievable daily goals to build momentum</div>
+                        </li>
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">💚</div>
+                            <div class="recommendation-text">Practice self-compassion and celebrate small wins</div>
+                        </li>
+                    {% else %}
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">🚀</div>
+                            <div class="recommendation-text">Consider setting new wellness goals to continue growing</div>
+                        </li>
+                        <li class="recommendation-item">
+                            <div class="recommendation-icon">🤝</div>
+                            <div class="recommendation-text">Share your positive strategies with others who might benefit</div>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+        {% else %}
+            <div class="empty-insights">
+                <h3>📊 Start Building Your Insights</h3>
+                <p>Track your mood, chat with our AI assistant, and write journal entries to see personalized insights about your mental health journey.</p>
+                
+                <div class="get-started-actions">
+                    <a href="{{ url_for('chat') }}" class="action-btn">💬 Start Chatting</a>
+                    <a href="{{ url_for('mood_history') }}" class="action-btn">📊 Track Mood</a>
+                    <a href="{{ url_for('journal') }}" class="action-btn">📖 Write Journal</a>
+                </div>
+                
+                <div style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 12px;">
+                    <h4 style="color: #667eea; margin-bottom: 1rem;">💡 What You'll Get:</h4>
+                    <ul style="list-style: none; text-align: left; max-width: 400px; margin: 0 auto;">
+                        <li style="padding: 0.5rem 0; color: #555;">📈 Mood trend analysis</li>
+                        <li style="padding: 0.5rem 0; color: #555;">🧠 Personalized insights</li>
+                        <li style="padding: 0.5rem 0; color: #555;">🎯 Custom recommendations</li>
+                        <li style="padding: 0.5rem 0; color: #555;">📊 Progress tracking</li>
+                        <li style="padding: 0.5rem 0; color: #555;">🌟 Pattern recognition</li>
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // Simple mood chart using Chart.js (if available) or custom implementation
+        function createMoodChart() {
+            const canvas = document.getElementById('moodTrendChart');
+            if (!canvas) return;
+            
+            // Fetch mood data from API
+            fetch('/api/mood_data?days=30')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        document.getElementById('moodChart').innerHTML = '<p style="color: #666;">No mood data available yet. Start tracking to see your trends!</p>';
+                        return;
+                    }
+                    
+                    // Simple canvas drawing for mood chart
+                    const ctx = canvas.getContext('2d');
+                    const width = canvas.width;
+                    const height = canvas.height;
+                    
+                    // Clear canvas
+                    ctx.clearRect(0, 0, width, height);
+                    
+                    // Set up chart area
+                    const margin = 40;
+                    const chartWidth = width - 2 * margin;
+                    const chartHeight = height - 2 * margin;
+                    
+                    // Draw background
+                    ctx.fillStyle = '#f8f9fa';
+                    ctx.fillRect(0, 0, width, height);
+                    
+                    // Draw grid lines
+                    ctx.strokeStyle = '#e0e0e0';
+                    ctx.lineWidth = 1;
+                    
+                    // Horizontal grid lines (mood levels)
+                    for (let i = 1; i <= 4; i++) {
+                        const y = margin + (chartHeight * (4 - i) / 4);
+                        ctx.beginPath();
+                        ctx.moveTo(margin, y);
+                        ctx.lineTo(width - margin, y);
+                        ctx.stroke();
+                        
+                        // Labels
+                        ctx.fillStyle = '#666';
+                        ctx.font = '12px Arial';
+                        ctx.fillText(i.toString(), 10, y + 5);
+                    }
+                    
+                    if (data.length < 2) return;
+                    
+                    // Calculate points
+                    const points = data.map((entry, index) => ({
+                        x: margin + (chartWidth * index / (data.length - 1)),
+                        y: margin + (chartHeight * (4 - entry.mood) / 4)
+                    }));
+                    
+                    // Draw mood line
+                    ctx.strokeStyle = '#667eea';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(points[0].x, points[0].y);
+                    
+                    for (let i = 1; i < points.length; i++) {
+                        ctx.lineTo(points[i].x, points[i].y);
+                    }
+                    ctx.stroke();
+                    
+                    // Draw mood points
+                    ctx.fillStyle = '#667eea';
+                    points.forEach(point => {
+                        ctx.beginPath();
+                        ctx.arc(point.x, point.y, 4, 0, 2 * Math.PI);
+                        ctx.fill();
+                    });
+                    
+                    // Add chart title
+                    ctx.fillStyle = '#333';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Mood Trend (1=Low, 4=High)', width / 2, 20);
+                })
+                .catch(error => {
+                    console.log('Error loading mood data:', error);
+                    document.getElementById('moodChart').innerHTML = '<p style="color: #666;">Unable to load chart data</p>';
+                });
+        }
+        
+        function selectPeriod(period) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Update chart with new period (in a real app, this would reload data)
+            const days = period === '7days' ? 7 : period === '90days' ? 90 : 30;
+            
+            // Show loading state
+            const chartContainer = document.getElementById('moodChart');
+            chartContainer.innerHTML = '<p style="color: #666;">Loading data...</p>';
+            
+            // Simulate data loading
+            setTimeout(() => {
+                createMoodChart();
+            }, 500);
+        }
+        
+        // Load chart when page loads
+        window.addEventListener('load', createMoodChart);
+        
+        // Add some interactive animations
+        document.querySelectorAll('.insight-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Animate counters on load
+        function animateCounters() {
+            const counters = document.querySelectorAll('.insight-value, .activity-count');
+            
+            counters.forEach(counter => {
+                const target = parseFloat(counter.textContent);
+                const increment = target / 50;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target % 1 === 0 ? target.toString() : target.toFixed(1);
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = current % 1 === 0 ? Math.floor(current).toString() : current.toFixed(1);
+                    }
+                }, 40);
+            });
+        }
+        
+        // Run animation on load
+        window.addEventListener('load', () => {
+            setTimeout(animateCounters, 200);
+        });
+    </script>
+</body>
+</html>
